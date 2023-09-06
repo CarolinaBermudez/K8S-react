@@ -61,7 +61,7 @@ kubectl get deploy
 //Para acceder a la aplicacion http://localhost
 minikube tunnel
 ==================================================================
-EN CASO DE ERRORES
+EN CASO DE AYUDA
 ==================================================================
 //Para errores o problemas con wsl correr cmd como administrador
 //los siguientes comandos nos muestra el estado 
