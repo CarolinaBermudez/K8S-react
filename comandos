@@ -1,0 +1,90 @@
+==================================================================
+DENTRO DE LA CARPETA SERVER
+===================================================================
+//Probar localmente aplicación server http://localhost:5000/
+npm run dev
+-------------------------------------------------------------------
+//Para compilar archivo Dockerfile.dev http://localhost:4003/
+docker build -f Dockerfile.dev -t carolinabermudez/multi-server .
+docker run -it -p 4003:5000 carolinabermudez/multi-server
+-------------------------------------------------------------------
+//Para compilar archivo Dockerfile http://localhost:4002/
+docker build -t carolinabermudez/multi-server .
+docker run -it -p 4002:5000 carolinabermudez/multi-server
+docker push carolinabermudez/multi-server
+
+
+==================================================================
+DENTRO DE LA CARPETA CLIENT                                       
+==================================================================
+//Probar localmente aplicación client http://localhost:3000/
+npm run start
+-------------------------------------------------------------------
+//Para compilar archivo Dockerfile.dev http://localhost:4002/
+docker build -f Dockerfile.dev -t carolinabermudez/multi-client .
+docker run -it -p 4002:3000 carolinabermudez/multi-client
+-------------------------------------------------------------------
+//Para compilar archivo Dockerfile
+docker build -t carolinabermudez/multi-client .
+docker run -it -p 3000:3000 carolinabermudez/multi-client
+docker push carolinabermudez/multi-client
+
+
+==================================================================
+DENTRO DE LA CARPETA K8S-REACT 1 PARTE
+==================================================================
+//Para levantar todo con compose http://localhost:3050/
+docker-compose up --build
+
+
+==================================================================
+DENTRO DE LA CARPETA K8S-REACT 2 PARTE
+==================================================================
+//Para crear la contraseña de la base de datos
+kubectl create secret generic pgpassword --from-literal PGPASSWORD=12345test
+kubectl get secrets
+
+//Para instalar el controlador de ingress-nginx
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
+//Para instalar el controlador de ingress con minikube
+minikube addons enable ingress
+//Para mostrar si se crearon bien los pods
+kubectl get pods -n ingress-nginx
+
+//Para aplicar los manifestos de kubernetes y mostrarlos los recursos
+kubectl apply -f k8s
+kubectl get pods
+kubectl get pv
+kubectl get services
+kubectl get deploy
+
+//Para acceder a la aplicacion http://localhost
+minikube tunnel
+==================================================================
+EN CASO DE ERRORES
+==================================================================
+//Para errores o problemas con wsl correr cmd como administrador
+//los siguientes comandos nos muestra el estado 
+//si se encuentra como "Stopped" habrá que cambiarlo
+wsl -l -vez 
+wsl -d ubuntu dmesg -w
+
+minikube start --driver=docker
+systemctl enable kubelet.service
+
+==================================================================
+COMANDOS DOCKER
+==================================================================
+//Para mostrar contenedores e imagenes com formato
+docker image list --format "table {{.ID}}\t{{.CreatedSince}}\t{{.Repository}}"
+docker container ls --format "{{.ID}}\t{{.Image}}\t{{.Status}}"
+docker container ls --format "{{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+//Detener y eliminar contenedor
+docker stop <Container_ID>
+docker rm <Container_ID>
+//Forzar eliminar contenedor 
+docker rm -f < Container_ID>
+//Eliminar imagen
+docker rmi -f <Image_name>
+//Eliminar deployment
+kubectl delete deployment <deploymentname>
